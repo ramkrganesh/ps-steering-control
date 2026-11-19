@@ -66,7 +66,7 @@ class SteeringControl:
             raise Exception(f"More than one connected input has the name {hardware_name}."
                             f"Try again with a suitable match.")
         #end if
-        print(f"Detected Steering: {connected_device[0].name}")
+        #print(f"Detected Steering: {connected_device[0].name}")
         return connected_device[0]  # There must be only one element
 
 
@@ -89,18 +89,13 @@ class SteeringControl:
     #end def
 
     def reset_steering_data(self):
-        self.steering_data = {
-            "steering_pos":     POS_CENTRE,
-            "steering_rot":     0,
-            "breaking":         0,
-            "throttle":         0,
-            "btn_triangle":     False,
-            "btn_circle":       False,
-            "btn_x":            False,
-            "btn_square":       False,
-            "r_paddleshifter":  False,
-            "l_paddleshifter":  False,
-        }
+
+        self.steering_data["btn_triangle"] = False
+        self.steering_data["btn_circle"] = False
+        self.steering_data["btn_x"] = False
+        self.steering_data["btn_square"] = False
+        self.steering_data["r_paddleshifter"] = False
+        self.steering_data["l_paddleshifter"] = False
     #end def
 
     def do_steering_events_detection(self):
@@ -112,59 +107,65 @@ class SteeringControl:
                         steering_angle = 0
                         if STEERING_LEFTMOST <= ev.value <= STEERING_MIDDLE:  # turning left
                             steering_angle = ((STEERING_MIDDLE - ev.value) / STEERING_MIDDLE) * 100
-                            print(f"Steering Angle LEFT: {steering_angle:.2f}%")
+                            #print(f"Steering Angle LEFT: {steering_angle:.2f}%")
                             self.steering_data["steering_pos"] = POS_LEFT
                         elif STEERING_MIDDLE < ev.value <= STEERING_RIGHTMOST:  # turning right
                             steering_angle = ((ev.value - STEERING_MIDDLE) / STEERING_MIDDLE) * 100
-                            print(f"Steering Angle RIGHT: {steering_angle:.2f}%")
+                            #print(f"Steering Angle RIGHT: {steering_angle:.2f}%")
                             self.steering_data["steering_pos"] = POS_RIGHT
                         #end if
                         self.steering_data["steering_rot"] = steering_angle
                     elif ev.code == ABS_RZ:
                         throttle = ((THROTTLE_NOT_APPLIED - ev.value) / THROTTLE_NOT_APPLIED) * 100
-                        print(f"Throttle : {throttle:.2f}%")
+                        #print(f"Throttle : {throttle:.2f}%")
                         self.steering_data["throttle"] = throttle
                     elif ev.code == ABS_Y:
                         breaking = ((BREAK_NOT_APPLIED - ev.value) / BREAK_NOT_APPLIED) * 100
-                        print(f"Breaking : {breaking:.2f}%")
+                        #print(f"Breaking : {breaking:.2f}%")
                         self.steering_data["breaking"] = breaking
                     #end if
                 elif ev.type == EV_KEY:
                     if ev.code == BTN_THUMB2:  # triange
                         if ev.value == 1:
-                            print(f"Triangle Button-press event Type-{ev.type}:Code-{ev.code} detected.")
+                            #print(f"Triangle Button-press event Type-{ev.type}:Code-{ev.code} detected.")
+                            pass
                         else:
-                            print(f"Triangle Button released.")
+                            #print(f"Triangle Button released.")
                             self.steering_data["btn_triangle"] = True
                     elif ev.code == BTN_TOP2:  # circle
                         if ev.value == 1:
-                            print(f"Circle Button-press event Type-{ev.type}:Code-{ev.code} detected.")
+                            #print(f"Circle Button-press event Type-{ev.type}:Code-{ev.code} detected.")
+                            pass
                         elif ev.value == 0:
-                            print(f"Circle Button released.")
+                            #print(f"Circle Button released.")
                             self.steering_data["btn_circle"] = True
                     elif ev.code == BTN_TOP:  # square
                         if ev.value == 1:
-                            print(f"Square Button-press event Type-{ev.type}:Code-{ev.code} detected.")
+                            #print(f"Square Button-press event Type-{ev.type}:Code-{ev.code} detected.")
+                            pass
                         elif ev.value == 0:
-                            print(f"Square Button released.")
+                            #print(f"Square Button released.")
                             self.steering_data["btn_square"] = True
                     elif ev.code == BTN_PINKIE:
                         if ev.value == 1:
-                            print(f"X Button-press event Type-{ev.type}:Code-{ev.code} detected.")
+                            #print(f"X Button-press event Type-{ev.type}:Code-{ev.code} detected.")
+                            pass
                         elif ev.value == 0:
-                            print(f"X Button released.")
+                            #print(f"X Button released.")
                             self.steering_data["btn_x"] = True
                     elif ev.code == BTN_THUMB:  # right paddle shifter
                         if ev.value == 1:
-                            print(f"Right Paddle-Shifter event Type-{ev.type}:Code-{ev.code} detected.")
+                            #print(f"Right Paddle-Shifter event Type-{ev.type}:Code-{ev.code} detected.")
+                            pass
                         elif ev.value == 0:  # left paddle shifter
-                            print(f"Right Padde-Shifter released")
+                            #print(f"Right Padde-Shifter released")
                             self.steering_data["r_paddleshifter"] = True
                     elif ev.code == BTN_TRIGGER:
                         if ev.value == 1:
-                            print(f"Left Paddle-Shifter event Type-{ev.type}:Code-{ev.code} detected.")
+                            #print(f"Left Paddle-Shifter event Type-{ev.type}:Code-{ev.code} detected.")
+                            pass
                         elif ev.value == 0:  # left paddle shifter
-                            print(f"Left Paddle-Shifter released")
+                            #print(f"Left Paddle-Shifter released")
                             self.steering_data["l_paddleshifter"] = True
                     #end if
                 # end if
@@ -188,12 +189,12 @@ if __name__ == '__main__':
                            default='Thrustmaster',
                            )
     args = argparser.parse_args()
-    print("Starting Steering Control...")
+    #print("Starting Steering Control...")
     steering_ctrl = SteeringControl(hardware_name=args.hardware_name)
     import pprint
     import time
     while True:
         steering_ctrl.do_steering_events_detection()
         steer_data = steering_ctrl.get_steering_data()
-        pprint.pprint(steer_data["throttle"])
+        #pprint.pprint(steer_data["throttle"])
         time.sleep(0.500)
