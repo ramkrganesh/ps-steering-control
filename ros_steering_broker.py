@@ -16,7 +16,7 @@ class SteeringDataPublisher(Node):
         st_data = String()
         self.steeringctrl.do_steering_events_detection()
         steering_data = self.steeringctrl.get_steering_data()
-        st_data.data = str(steering_data["r_paddleshifter"])
+        st_data.data = str(steering_data["throttle"])
         self.st_publisher.publish(st_data)
         self.get_logger().info(f"Sent Throttle: {st_data.data}")
 
