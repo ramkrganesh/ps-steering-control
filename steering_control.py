@@ -46,7 +46,7 @@ class SteeringControl:
         self.steering_device = self.get_steering_device(self.hardware_name)
         self.dev_capabilities = self.steering_device.capabilities(verbose=False, absinfo=True)
         self.set_device_value_ranges(self.dev_capabilities)
-        self.reset_steering_data()
+        self.reset_steering_data(init=True)
     #end post_init
 
     def get_steering_device(self, hardware_name:str='Thrustmaster')-> evdev.InputDevice:
@@ -88,8 +88,13 @@ class SteeringControl:
         THROTTLE_FULL_BEANS = capabilities[EV_ABS][CAPA_ABS_RZ][1].min
     #end def
 
-    def reset_steering_data(self):
-
+    def reset_steering_data(self, init=False):
+        if init == True:
+            self.steering_data["steering_pos"] = 0
+            self.steering_data["steering_rot"] = 0
+            self.steering_data["throttle"] = 0
+            self.steering_data["breaking"] = 0
+        #end if
         self.steering_data["btn_triangle"] = False
         self.steering_data["btn_circle"] = False
         self.steering_data["btn_x"] = False
